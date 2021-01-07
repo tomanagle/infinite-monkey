@@ -8,7 +8,7 @@ const host = 'localhost';
 const port = 8000;
 
 const requestListener = function (req, res) {
-  console.time('req');
+  console.time('request');
   const data = require('./data.json');
 
   const heap = v8.getHeapStatistics();
@@ -16,7 +16,7 @@ const requestListener = function (req, res) {
   res.writeHead(200);
 
   res.end(JSON.stringify({ data, target, heap }));
-  console.timeEnd('req');
+  console.timeEnd('request');
 };
 
 const server = http.createServer(requestListener);

@@ -38,24 +38,20 @@ let best = initialData.best || [];
 
 const resetOnFailure = true; // Should the current be reset on every failure
 
-let rounds = initialData.rounds || 0;
-
-function shouldBest({ rounds, current }) {
+function shouldBest({ current }) {
   if (!current) return;
   const bestBest = best[best.length - 1];
 
   if (!bestBest || current.length > bestBest.word.length) {
     best.push({
       word: current,
-      rounds,
       timestamp: new Date()
     });
 
     fs.writeFileSync(
       './data.json',
       JSON.stringify({
-        best: best,
-        rounds
+        best: best
       }),
       'utf-8'
     );
@@ -63,19 +59,6 @@ function shouldBest({ rounds, current }) {
 }
 
 while (current !== letters) {
-  rounds = rounds + 1;
-
-  if (rounds % 1e6 === 0) {
-    fs.writeFileSync(
-      './data.json',
-      JSON.stringify({
-        best: best,
-        rounds
-      }),
-      'utf-8'
-    );
-  }
-
   const letter = letters[Math.floor(Math.random() * 26)];
   const targetLetter = target[current.length];
 
@@ -92,7 +75,7 @@ while (current !== letters) {
   if (fits) {
     current = `${current}${letter}`;
 
-    shouldBest({ rounds, current });
+    shouldBest({ current });
 
     continue;
   } else if (resetOnFailure) {
